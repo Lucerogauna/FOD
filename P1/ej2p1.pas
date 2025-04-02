@@ -15,28 +15,25 @@ procedure analizar(var archivo: numeros; var promedio: real; var mas1500: intege
 var
 	n: integer;
 	begin
-	Reset (archivo);//actualiza el puntero al primero
 	while not eof(archivo) do begin
-		writeln('nombre del archivo N:', filepos(archivo)); // o filepos(archivo)+1 porque arranca de 0 
+		writeln('pos :', filepos(archivo)+1); // o filepos(archivo)+1 porque arranca de 0 
 		Read(archivo, n);
-		Seek(archivo,filepos(archivo)-1);
-		Write(archivo, n);
-		promedio := promedio + n ;
-		writeln(n);
-		if (n<1500) then
+		promedio := promedio + n ; // n tiene lo que leyo recien
+		//Write(archivo, n);
+		if (n > 1500) then 
 		  mas1500:= mas1500+1;
+		writeln(' se leyo el numero', n);
+		 
 	end;
-	writeln(' tamaño del archivo',filesize(archivo));
 	promedio:= promedio/filesize(archivo);
-	close(archivo);
 	end;
 var 
-	nro: integer; max1500: integer;
+	max1500: integer;
 	prom: real;
-	arch_fisico: string[20];
+	arch_fisico: string[20]; // nombre
 	arch_nros : numeros;
 BEGIN
-	writeln('leer nombre del archivo fisico');
+	{writeln('leer nombre del archivo fisico');
 	readln (arch_fisico);
 	assign(arch_nros, arch_fisico);
 	rewrite(arch_nros);
@@ -47,9 +44,14 @@ BEGIN
 		writeln('leer nro');
 		readln (nro);
 	end;
-	close(arch_nros);
+	close(arch_nros); }
+	max1500:=0;
+	arch_fisico := 'ejemplo14'; // el nombre del archivo 1 
+	assign (arch_nros, arch_fisico);
+	reset(arch_nros);
 	analizar(arch_nros,prom, max1500);
 	writeln('promedio',prom:2:0);
 	writeln('cant de numeros < 1500  ',max1500);
+	close(arch_nros);
 END.
 
