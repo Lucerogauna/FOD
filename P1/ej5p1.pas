@@ -19,7 +19,7 @@
  nombre en ese orden. Cada celular se carga leyendo tres líneas del archivo
  “celulares.txt”.
    
-   preguntar inciso C como hago para recorrer la descripcion
+
 }
 
 
@@ -34,16 +34,6 @@ type
 		stockmin: integer;
 		stockdisp: integer;
 	end;
-	lista =^nodo;
-	nodo = record
-		dato: registro;
-		sig: lista;
-		end;
-	lista2 =^nodo2;
-	nodo2 = record
-		cel: string;
-		sig: lista2;
-		end;
 	tienda = file of registro;
 procedure leerR(var celu: registro);
 begin
@@ -59,43 +49,121 @@ begin
 		end;
 	end;
 end;
-procedure agregarL(r: registro; var l: lista);
-var 
-	nue: lista;
+procedure imprimirDatos (e: registro);
 begin
-	new (nue);
-	nue^.dato:= r;
-	nue^.sig:= l;
-	l:= nue;
+	writeln(e.nombre);
+	writeln(e.descripcion);
+	writeln(e.marca);//completarDatos
 end;
-procedure IncisoB(var a: tienda; var l: lista);
+procedure IncisoB(var a: tienda);
 var e: registro;
 begin
 	Reset(a);
 	while not eof(a) do begin
 		Read(a, e);
 		if (e.stockdisp < e.stockmin) then
-			agregarL(e, l);
+			imprimirDatos(e)
 	end;
+end;
+{procedure IncisoC (var a: tienda);
+var
+  e: registro;
+begin
+	Reset(a);
+	while not eof(a) do begin
+		Read(a, e);
+		if (e.descipcion = a.descripcion)
+		* writeln ();
+end;}
+procedure ModificarStock(var t: tienda; codCel: integer);
+var 
+	e: registro; nm: real;
+begin
+	Reset(t);
+	read(t, e);
+	while not eof(t) and (codCel <> e.codCel) do  
+		Read(t, e);
+	if (codCel = e.codCel) then begin
+		seek (t, filepos(t)-1);
+		writeln('leer nuevo monto'); read(nm);
+		e.precio:= nm;
+		Write(t, e)
+	end;
+	close(t);
+		
+end;
+procedure Agregar (var t: tienda); // pregunt<<r 
+var 
+  celu: registro;
+begin
+	Reset(t);
+	leerR(celu);
+	seek(t, filesize(t));
+	while (celu.nombre <> '.') do begin
+		Write(t, celu);
+		leerR(celu)
+	end;
+	close(t);
+end;
+procedure ExportarC (var a: tienda; var at: text);
+var
+	r: registro;
+begin
+	reset(a);
+	reset(at);
+	while not eof(a) do begin
+		read(a, r);
+		if (r.stockdisp = 0) then begin
+			//seek(a, filepos(a)-1); //vuelvo al ant
+			write(at, r.nombre, r.marca, r.precio);
+			end;
+		end;
+		close(a);
+		close (at);
 end;
 var 
 	archF: string;
 	tiendaCelu:tienda;
+	archT, sinStock: text;
 	r: registro;
-	l: lista;
+	celularX, op: integer;
+	
 BEGIN
-	l:= nil;
 	writeln('leer nombre del archivo');
 	Read(archF);
 	assign(tiendaCelu, archF);
+	assign(archT, 'celulares.txt');
+	rewrite(archT);
+	assign(sinStock, 'sinStock.txt'); //esta bien aca o en el modulo?
+	rewrite(sinStock);
 	rewrite(tiendaCelu);
-	leerR(r);
-	while (r.codCel<> 0 ) do begin
-		Write(tiendaCelu, r);
+	Writeln ('bienvenido al menu');
+	writeln('ingrese 1 para crear el archivo');
+	writeln('ingrese 2 para listar los datos de celulares con stock menor al min');
+	writeln('ingrese 3 para listar en pantalla los celulates con cadena x');
+	writeln('ingrese 4 exportar a txt');
+	read(op);
+	case op of
+	1 : begin
 		leerR(r);
+		while (r.codCel <> 0) do begin
+			write(tiendaCelu, r);
+			write (archT, r.codCel, r.precio, r.marca);
+			write(archT, r.stockdisp, r.stockmin, r.descripcion);
+			write(archT, r.nombre);
+			leerR(r);
+		end;
+	end;
+	2: incisoB(tiendaCelu);
 	end;
 	close(tiendaCelu);
 	
-	IncisoB(tiendaCelu, l)
+	IncisoB(tiendaCelu);
+	//falta inciso C preguntar
+	Agregar(tiendaCelu); //inciso 6A
+	writeln('leer celular X');
+	read(celularX);
+	ModificarStock(tiendaCelu, celularX);
+	ExportarC(tiendaCelu, sinStock)
 END.
 
