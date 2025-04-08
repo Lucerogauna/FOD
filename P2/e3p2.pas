@@ -74,7 +74,6 @@ begin
 		end;
 		{se guarda en el archivo maestro}
 		write(maest, aux);
-		//hago un seek?
 	end;
 	close(maest);
 	close(d1);
