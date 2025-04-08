@@ -11,7 +11,7 @@ pueden venir 0, 1 ó más registros por cada provincia.
 
 
 program e3tp2;
-	const valorAlto= -1
+	const valorAlto= "ZZZ" // depende del campo de criterio de orden
 type
 	datos = record 
 		nombreProv: string;
