@@ -56,7 +56,7 @@ begin
 	reset(maest);
 	reset(d1);
 	reset(d2);
-	leer(d1, det1);
+	leer(d1, det1); //leo para no cargar basura cuando llamo a min
 	leer(d2, det2);
 	minimio(det1, det2, min);
 	{se procesan los detalles}
